@@ -14,10 +14,26 @@ async fn main() {
     // TODO: Set up some general state and settings.
     let mut settings = Settings::register();
 
+    // Base Settings
+    let plattform = "linux";
+    let process_name: &str;
+    match plattform {
+        "linux" => {
+            process_name = "MinaTheHollower";
+        }
+        "windows" => {
+            process_name = "MinaTheHollower.exe";
+        }
+        _ => {
+            asr::print_message("invalid plattform");
+            process_name = "";
+        }
+    }
+
     asr::print_message("Setup done. Waiting for Process.");
 
     loop {
-        let process = Process::wait_attach("MinaTheHollower").await;
+        let process = Process::wait_attach(process_name).await;
         process
             .until_closes(async {
                 asr::print_message("Process found.");
