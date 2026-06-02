@@ -1,6 +1,7 @@
 use asr::settings::gui::{set_tooltip, Title};
 use asr::settings::Gui;
 
+/*
 pub fn set_tooltips() {
     {
         /*
@@ -11,6 +12,7 @@ pub fn set_tooltips() {
         */
     }
 }
+*/
 
 #[derive(Gui)]
 pub struct Settings {
