@@ -1,12 +1,15 @@
 #![allow(non_snake_case)]
+#![allow(unused_imports)] //remove
 
 use asr::{
     future::next_tick, 
     settings::Gui, 
     Process, 
+    time::Duration,
     watcher::Watcher,
     PointerSize::Bit64,
     Address,
+    signature::Signature,
     print_message,
     timer::{
         reset, 
@@ -32,7 +35,7 @@ async fn main() {
     let mut settings = splitter_settings::Settings::register();
 
     // Base Settings
-    let plattform = "linux";
+    let plattform = "windows";
     let process_name: &str;
     match plattform {
         "linux" => {
@@ -55,14 +58,10 @@ async fn main() {
         process
             .until_closes(async {
                 print_message("Process found.");
-
-                if let Ok(base_address) = process.get_module_address(process_name){
-                    set_variable_int("base", base_address.value());
-                    let offset_arrays = get_offsets(&process, process_name);
-
-
-                    // Game Timer (seconds)
-                    
+                
+                // Game Timer (seconds)
+                if let Some(offset_arrays) = get_offsets(&process, process_name){
+                
                     let mut watch_fPlayTimeCleared: Watcher<f64> = Watcher::new();
                     watch_fPlayTimeCleared.update_infallible(0f64);
 
@@ -72,21 +71,21 @@ async fn main() {
                         
                         // TODO: Do something on every tick.
 
-                        
                         // Game Timer
                         if let Ok(time) = process.read_pointer_path::<f64>(
-                            base_address,
+                            offset_arrays.savemanager,
                             Bit64,
                             &offset_arrays.fPlayTimeCleared,
                         ) {
                             watch_fPlayTimeCleared.update_infallible(time);
                             set_variable_float("fPlayTimeCleared", time);
-                            //set_game_time(Duration::seconds_f64(time));
+                            set_game_time(Duration::seconds_f64(time));
                         }
                         
                         next_tick().await;
                     }
-                }
+                }   
+                
             })
             .await;
     }
