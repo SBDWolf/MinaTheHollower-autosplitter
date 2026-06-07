@@ -179,9 +179,9 @@ async fn main() {
                                 // start timer
                                 if let Some(fPlayTime) = &watch_fPlayTime.pair {
                                     if settings.auto_reset_start
-                                        && fPlayTime.old != fPlayTime.current
                                         && fPlayTime.old == 0f64
                                         && fPlayTime.current > 0f64
+                                        && fPlayTime.current < 1f64
                                     {
                                         start();
                                         pause_game_time();
