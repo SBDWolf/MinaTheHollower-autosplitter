@@ -25,7 +25,7 @@ pub fn get_offsets(process: &Process, process_name: &str) -> Option<Offsets> {
         fPlayTimeCleared: [0x18, 0x10],
         fPlayTimeTotal: [0x18, 0x18],
         generatorActivated: [0x18, 0x290],
-        sCheckpointGamestate: [0x1f8],
+        sCheckpointGamestate: [0x1e8],
         bGameCleared: [0x18, 0xd30],
         mapSeen: [0x18, 0xd4d],
     })

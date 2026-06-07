@@ -45,7 +45,7 @@ impl SplitsCompleted {
 
 asr::async_main!(stable);
 
-const PROCESS_NAMES: &[&str] = &["MinaTheHollower.exe", "MinaTheHollower"];
+const PROCESS_NAMES: &[&str] = &["MinaTheHollower", "MinaTheHollower.exe"];
 
 async fn main() {
     let mut settings = splitter_settings::Settings::register();
@@ -160,7 +160,6 @@ async fn main() {
                             "map_seen_count",
                             mapSeen_bytes.iter().filter(|&&b| b != 0).count() as i32,
                         );
-
                         if let Ok(state) = process.read_pointer_path::<u32>(
                             offset_arrays.savemanager,
                             Bit64,
@@ -185,6 +184,7 @@ async fn main() {
                                         && fPlayTime.current > 0f64
                                     {
                                         start();
+                                        pause_game_time();
                                     }
                                 }
                             }
@@ -368,5 +368,5 @@ async fn main() {
 fn reset_all(splits_completed: &mut SplitsCompleted) {
     splits_completed.reset();
     reset();
-    //pause_game_time();
+    pause_game_time();
 }
