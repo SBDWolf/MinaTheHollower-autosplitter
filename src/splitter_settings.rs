@@ -54,6 +54,11 @@ pub struct Settings {
     /// Split on the Astral Orrery generator
     #[default = true]
     pub astral_orrery: bool,
+    /// Radiant Manor
+    ///
+    /// Split on the Radiant Manor generator
+    #[default = true]
+    pub game_cleared: bool,
     #[heading_level = 1]
     enter_area: Title,
     /// Astral Orrery
@@ -142,10 +147,10 @@ pub struct Settings {
     #[default = false]
     pub western_wilds_enter: bool,
     #[heading_level = 1]
-    game_clared: Title,
-    /// Game Cleared
+    timer: Title,
+    /// Auto-Reset/Start (on Profile Select)
     ///
-    /// Split when the game is cleared
+    /// Automatically reset and start the timer. This will happen when selecting a new profile.
     #[default = true]
-    pub game_cleared: bool,
+    pub auto_reset_start: bool,
 }

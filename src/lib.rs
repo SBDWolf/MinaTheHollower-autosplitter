@@ -179,12 +179,12 @@ async fn main() {
                             TimerState::NotRunning => {
                                 // start timer
                                 if let Some(fPlayTime) = &watch_fPlayTime.pair {
-                                    if fPlayTime.old != fPlayTime.current
+                                    if settings.auto_reset_start
+                                        && fPlayTime.old != fPlayTime.current
                                         && fPlayTime.old == 0f64
                                         && fPlayTime.current > 0f64
                                     {
                                         start();
-                                        //reset_all();
                                     }
                                 }
                             }
@@ -192,11 +192,13 @@ async fn main() {
                             TimerState::Running => {
                                 // reset and start timer, made to handle quitting to title and reloading the profile
                                 if let Some(fPlayTime) = &watch_fPlayTime.pair {
-                                    if fPlayTime.old == 0f64
+                                    if settings.auto_reset_start
+                                        && fPlayTime.old == 0f64
                                         && fPlayTime.current > 0f64
                                         && fPlayTime.current < 1f64
                                     {
                                         reset_all(&mut splits_completed);
+                                        start();
                                     }
                                 }
                                 // split logic
@@ -365,8 +367,6 @@ async fn main() {
 
 fn reset_all(splits_completed: &mut SplitsCompleted) {
     splits_completed.reset();
-
     reset();
-    start();
-    pause_game_time();
+    //pause_game_time();
 }
