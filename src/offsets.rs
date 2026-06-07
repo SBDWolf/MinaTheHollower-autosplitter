@@ -27,6 +27,7 @@ pub fn get_offsets(process: &Process, process_name: &str) -> Option<Offsets> {
         generatorActivated: [0x18, 0x290],
         sCheckpointGamestate: [0x1f8],
         bGameCleared: [0x18, 0xd30],
+        mapSeen: [0x18, 0xd4d],
     })
 }
 
@@ -38,4 +39,5 @@ pub(crate) struct Offsets {
     pub generatorActivated: [u64; 2],
     pub bGameCleared: [u64; 2],
     pub sCheckpointGamestate: [u64; 1],
+    pub mapSeen: [u64; 2],
 }
