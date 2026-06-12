@@ -18,10 +18,7 @@ pub fn set_tooltips() {
 pub struct Settings {
     #[heading_level = 0]
     mina_the_hollower: Title,
-    // #[heading_level = 1]
-    // bosses: Title,
-    // #[default = true]
-    // pub lionel_two: bool,
+
     #[heading_level = 1]
     generators: Title,
     /// Queensbury Crypt
@@ -59,6 +56,152 @@ pub struct Settings {
     /// Split on the Radiant Manor generator
     #[default = true]
     pub game_cleared: bool,
+    #[heading_level = 1]
+    bosses_defeated: Title,
+    #[heading_level = 2]
+    required_bosses: Title,
+    /// Nether Kraken
+    ///
+    /// Split after defeating Nether Kraken
+    #[default = false]
+    pub nether_kraken_defeated: bool,
+    /// Hulk Trooper
+    ///
+    /// Split after defeating Hulk Trooper
+    #[default = false]
+    pub hulk_trooper_defeated: bool,
+    /// Thorne 1
+    ///
+    /// Split after defeating Thorne 1
+    #[default = false]
+    pub thorne_1_defeated: bool,
+    /// The Duchess
+    ///
+    /// Split after defeating The Duchess
+    #[default = false]
+    pub the_duchess_defeated: bool,
+    /// Nox's Beast
+    ///
+    /// Split after defeating Nox's Beast
+    #[default = false]
+    pub noxs_beast_defeated: bool,
+    /// Madd House
+    ///
+    /// Split after defeating Madd House
+    #[default = false]
+    pub madd_house_defeated: bool,
+    /// The Carving Man
+    ///
+    /// Split after defeating The Carving Man
+    #[default = false]
+    pub the_carving_man_defeated: bool,
+    /// Major Miner
+    ///
+    /// Split after defeating Major Miner
+    #[default = false]
+    pub major_miner_defeated: bool,
+    /// Mined Mind
+    ///
+    /// Split after defeating Mined Mind
+    #[default = false]
+    pub mined_mind_defeated: bool,
+    /// Thorne 2
+    ///
+    /// Split after defeating Thorne 2
+    #[default = false]
+    pub thorne_2_defeated: bool,
+    /// Frozen Horror
+    ///
+    /// Split after defeating Frozen Horror
+    #[default = false]
+    pub frozen_horror_defeated: bool,
+    /// Locomotress Agnes
+    ///
+    /// Split after defeating Locomotress Agnes
+    #[default = false]
+    pub locomotress_agnes_defeated: bool,
+    /// Lumenarks
+    ///
+    /// Split after defeating Lumenarks
+    #[default = false]
+    pub lumenarks_defeated: bool,
+    /// The Congealed
+    ///
+    /// Split after defeating The Congealed
+    #[default = false]
+    pub the_congealed_defeated: bool,
+    /// Furgus The Faithful
+    ///
+    /// Split after defeating Furgus The Faithful
+    #[default = false]
+    pub furgus_the_faithful_defeated: bool,
+    /// Baron Lionel
+    ///
+    /// Split after defeating Baron Lionel
+    #[default = false]
+    pub baron_lionel_defeated: bool,
+    /// Radiant Lionel
+    ///
+    /// Split after defeating Radiant Lionel
+    #[default = false]
+    pub radiant_lionel_defeated: bool,
+    #[heading_level = 2]
+    optional_bosses: Title,
+    /// Midden
+    ///
+    /// Split after defeating Midden
+    #[default = false]
+    pub midden_defeated: bool,
+    /// Maxi
+    ///
+    /// Split after defeating Maxi
+    #[default = false]
+    pub maxi_defeated: bool,
+    /// Mock Moon
+    ///
+    /// Split after defeating Mock Moon
+    #[default = false]
+    pub mock_moon_defeated: bool,
+    /// Dugin?
+    ///
+    /// Split after defeating Dugin?
+    #[default = false]
+    pub dugin_defeated: bool,
+    /// Armand
+    ///
+    /// Split after defeating Armand
+    #[default = false]
+    pub armand_defeated: bool,
+    /// Dark Deluxy
+    ///
+    /// Split after defeating Dark Deluxy
+    #[default = false]
+    pub dark_deluxy_defeated: bool,
+    /// Mirren
+    ///
+    /// Split after defeating Mirren
+    #[default = false]
+    pub mirren_defeated: bool,
+    /// ??????
+    ///
+    /// Split after defeating ??????
+    #[default = false]
+    pub thorne_3_defeated: bool,
+    /// Evra
+    ///
+    /// Split after defeating Evra
+    #[default = false]
+    pub evra_defeated: bool,
+    /// Wonder Willis
+    ///
+    /// Split after defeating Wonder Willis
+    #[default = false]
+    pub wonder_willis_defeated: bool,
+    /// Thalassion
+    ///
+    /// Split after defeating Thalassion
+    #[default = false]
+    pub thalassion_defeated: bool,
     #[heading_level = 1]
     enter_area: Title,
     /// Astral Orrery

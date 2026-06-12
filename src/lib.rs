@@ -23,6 +23,7 @@ use crate::offsets::get_offsets;
 // track which splits have already been completed so that they only trigger once
 struct SplitsCompleted {
     generators: u8,
+    bosses_defeated: u32,
     game_cleared: bool,
     map_seen: [bool; 17],
 }
@@ -31,6 +32,7 @@ impl SplitsCompleted {
     fn new() -> Self {
         SplitsCompleted {
             generators: 0x00,
+            bosses_defeated: 0x00,
             game_cleared: false,
             map_seen: [false; 17],
         }
@@ -38,6 +40,7 @@ impl SplitsCompleted {
 
     fn reset(&mut self) {
         self.generators = 0x00;
+        self.bosses_defeated = 0x00;
         self.game_cleared = false;
         self.map_seen = [false; 17];
     }
@@ -134,6 +137,17 @@ async fn main() {
                         ) {
                             generator = g;
                             set_variable_int("generatorActivated", generator);
+                        }
+
+                        let mut bossDefeated: u32 = 0;
+                        if let Ok(b) = process.read_pointer_path::<u32>(
+                            offset_arrays.savemanager,
+                            Bit64,
+                            &offset_arrays.bossDefeated,
+                        ) {
+                            bossDefeated = b;
+                            set_variable_int("bossDefeated", bossDefeated);
+                            set_variable("bossDefeated", format!("{:034b}", bossDefeated).as_str());
                         }
 
                         let mut bGameCleared: u8 = 0;
@@ -308,6 +322,177 @@ async fn main() {
                                     splits_completed.map_seen[16] = true;
                                     split();
                                 }
+
+                                // bosses
+                                if settings.thorne_1_defeated
+                                    && (bossDefeated & 0x01) != 0
+                                    && (splits_completed.bosses_defeated & 0x01) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x01;
+                                    split();
+                                } else if settings.the_duchess_defeated
+                                    && (bossDefeated & 0x02) != 0
+                                    && (splits_completed.bosses_defeated & 0x02) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x02;
+                                    split();
+                                } else if settings.noxs_beast_defeated
+                                    && (bossDefeated & 0x04) != 0
+                                    && (splits_completed.bosses_defeated & 0x04) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x04;
+                                    split();
+                                } else if settings.the_carving_man_defeated
+                                    && (bossDefeated & 0x08) != 0
+                                    && (splits_completed.bosses_defeated & 0x08) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x08;
+                                    split();
+                                } else if settings.mined_mind_defeated
+                                    && (bossDefeated & 0x10) != 0
+                                    && (splits_completed.bosses_defeated & 0x10) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x10;
+                                    split();
+                                } else if settings.locomotress_agnes_defeated
+                                    && (bossDefeated & 0x20) != 0
+                                    && (splits_completed.bosses_defeated & 0x20) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x20;
+                                    split();
+                                } else if settings.the_congealed_defeated
+                                    && (bossDefeated & 0x40) != 0
+                                    && (splits_completed.bosses_defeated & 0x40) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x40;
+                                    split();
+                                } else if settings.baron_lionel_defeated
+                                    && (bossDefeated & 0x80) != 0
+                                    && (splits_completed.bosses_defeated & 0x80) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x80;
+                                    split();
+                                } else if settings.radiant_lionel_defeated
+                                    && (bossDefeated & 0x0100) != 0
+                                    && (splits_completed.bosses_defeated & 0x0100) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x0100;
+                                    split();
+                                } else if settings.thorne_2_defeated
+                                    && (bossDefeated & 0x0200) != 0
+                                    && (splits_completed.bosses_defeated & 0x0200) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x0200;
+                                    split();
+                                } else if settings.nether_kraken_defeated
+                                    && (bossDefeated & 0x0400) != 0
+                                    && (splits_completed.bosses_defeated & 0x0400) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x0400;
+                                    split();
+                                } else if settings.madd_house_defeated
+                                    && (bossDefeated & 0x1000) != 0
+                                    && (splits_completed.bosses_defeated & 0x1000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x1000;
+                                    split();
+                                } else if settings.major_miner_defeated
+                                    && (bossDefeated & 0x2000) != 0
+                                    && (splits_completed.bosses_defeated & 0x2000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x2000;
+                                    split();
+                                } else if settings.lumenarks_defeated
+                                    && (bossDefeated & 0x4000) != 0
+                                    && (splits_completed.bosses_defeated & 0x4000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x4000;
+                                    split();
+                                } else if settings.frozen_horror_defeated
+                                    && (bossDefeated & 0x8000) != 0
+                                    && (splits_completed.bosses_defeated & 0x8000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x8000;
+                                    split();
+                                } else if settings.dugin_defeated
+                                    && (bossDefeated & 0x010000) != 0
+                                    && (splits_completed.bosses_defeated & 0x010000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x010000;
+                                    split();
+                                } else if settings.mock_moon_defeated
+                                    && (bossDefeated & 0x020000) != 0
+                                    && (splits_completed.bosses_defeated & 0x020000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x020000;
+                                    split();
+                                } else if settings.maxi_defeated
+                                    && (bossDefeated & 0x040000) != 0
+                                    && (splits_completed.bosses_defeated & 0x040000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x040000;
+                                    split();
+                                } else if settings.furgus_the_faithful_defeated
+                                    && (bossDefeated & 0x08000) != 0
+                                    && (splits_completed.bosses_defeated & 0x080000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x080000;
+                                    split();
+                                } else if settings.wonder_willis_defeated
+                                    && (bossDefeated & 0x100000) != 0
+                                    && (splits_completed.bosses_defeated & 0x100000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x100000;
+                                    split();
+                                } else if settings.armand_defeated
+                                    && (bossDefeated & 0x200000) != 0
+                                    && (splits_completed.bosses_defeated & 0x200000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x200000;
+                                    split();
+                                } else if settings.evra_defeated
+                                    && (bossDefeated & 0x400000) != 0
+                                    && (splits_completed.bosses_defeated & 0x400000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x400000;
+                                    split();
+                                } else if settings.thorne_3_defeated
+                                    && (bossDefeated & 0x800000) != 0
+                                    && (splits_completed.bosses_defeated & 0x800000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x800000;
+                                    split();
+                                } else if settings.dark_deluxy_defeated
+                                    && (bossDefeated & 0x01000000) != 0
+                                    && (splits_completed.bosses_defeated & 0x01000000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x01000000;
+                                    split();
+                                } else if settings.mirren_defeated
+                                    && (bossDefeated & 0x02000000) != 0
+                                    && (splits_completed.bosses_defeated & 0x02000000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x02000000;
+                                    split();
+                                } else if settings.thalassion_defeated
+                                    && (bossDefeated & 0x04000000) != 0
+                                    && (splits_completed.bosses_defeated & 0x04000000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x04000000;
+                                    split();
+                                } else if settings.hulk_trooper_defeated
+                                    && (bossDefeated & 0x08000000) != 0
+                                    && (splits_completed.bosses_defeated & 0x08000000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x08000000;
+                                    split();
+                                } else if settings.midden_defeated
+                                    && (bossDefeated & 0x10000000) != 0
+                                    && (splits_completed.bosses_defeated & 0x10000000) == 0
+                                {
+                                    splits_completed.bosses_defeated |= 0x10000000;
+                                    split();
+                                } 
 
                                 // generators
                                 if settings.queensbury_crypt
