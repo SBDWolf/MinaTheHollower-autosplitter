@@ -113,7 +113,7 @@ async fn main() {
                             &offset_arrays.fPlayTimeCleared,
                         ) {
                             set_variable_float("fPlayTimeCleared", time);
-                            set_game_time(Duration::seconds_f64(time));
+
                         }
 
                         if let Ok(time) = process.read_pointer_path::<f64>(
@@ -160,6 +160,7 @@ async fn main() {
                             "map_seen_count",
                             mapSeen_bytes.iter().filter(|&&b| b != 0).count() as i32,
                         );
+                        /*
                         if let Ok(state) = process.read_pointer_path::<u32>(
                             offset_arrays.savemanager,
                             Bit64,
@@ -173,7 +174,7 @@ async fn main() {
                                 }
                             }
                         }
-
+                        */
                         match state() {
                             TimerState::NotRunning => {
                                 // start timer
@@ -183,8 +184,7 @@ async fn main() {
                                         && fPlayTime.current > 0f64
                                         && fPlayTime.current < 1f64
                                     {
-                                        reset_all(&mut splits_completed);
-                                        start();
+                                        fresh_start(&mut splits_completed);
                                     }
                                 }
                             }
@@ -197,9 +197,8 @@ async fn main() {
                                         && fPlayTime.current < 1f64
                                     {
                                         reset_all(&mut splits_completed);
-                                        start();
                                     }
-                                    if fPlayTime.current < 1f64 {
+                                    if fPlayTime.current > 0f64 {
                                         set_game_time(Duration::seconds_f64(fPlayTime.current));
                                     }
                                 }
@@ -371,4 +370,11 @@ fn reset_all(splits_completed: &mut SplitsCompleted) {
     splits_completed.reset();
     reset();
     pause_game_time();
+    start();
+}
+
+fn fresh_start(splits_completed: &mut SplitsCompleted) {
+    splits_completed.reset();
+    pause_game_time();
+    start();
 }
