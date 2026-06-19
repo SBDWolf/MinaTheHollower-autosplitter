@@ -96,11 +96,13 @@ async fn main() {
                 print_message("Process found.");
 
                 let mut splits_completed = SplitsCompleted::new();
+                let mut prev_timer_state = TimerState::NotRunning;
 
                 if let Some(offset_arrays) = get_offsets(&process, process_name) {
                     print_message("Starting Loop.");
                     loop {
                         settings.update();
+                        let current_timer_state = state();
 
                         // Game Timer
                         if let Ok(time) = process.read_pointer_path::<f64>(
@@ -203,6 +205,18 @@ async fn main() {
                             }
                         }
                         */
+
+                        // detect if the timer was started, to handle manual timer start as well
+                        if prev_timer_state == TimerState::NotRunning
+                            && matches!(
+                                current_timer_state,
+                                TimerState::Running | TimerState::Paused
+                            )
+                        {
+                            splits_completed.reset();
+                            pause_game_time();
+                        }
+                        prev_timer_state = current_timer_state;
 
                         match state() {
                             TimerState::NotRunning => {
