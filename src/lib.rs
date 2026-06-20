@@ -1,18 +1,15 @@
 #![allow(non_snake_case)]
-#![allow(unused_imports)] //remove
 
 use asr::{
     future::{next_tick, retry},
     print_message,
     settings::Gui,
-    signature::Signature,
     time::Duration,
     timer::{
         pause_game_time, reset, set_game_time, set_variable, set_variable_float, set_variable_int,
         split, start, state, TimerState,
     },
     watcher::Watcher,
-    Address,
     PointerSize::Bit64,
     Process,
 };

@@ -1,18 +1,5 @@
-use asr::settings::gui::{set_tooltip, Title};
+use asr::settings::gui::Title;
 use asr::settings::Gui;
-
-/*
-pub fn set_tooltips() {
-    {
-        /*
-        set_tooltip(
-            "show_completion",
-            r##"Sets the variable "Completion". Can be displayed by LiveSplit as text."##,
-        );
-        */
-    }
-}
-*/
 
 #[derive(Gui)]
 pub struct Settings {
