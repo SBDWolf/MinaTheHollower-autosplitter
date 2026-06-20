@@ -1,39 +1,116 @@
 use asr::{
     print_message,
-    timer::{set_variable, set_variable_float, set_variable_int},
-    PointerSize::Bit64,
+    timer::set_variable,
+    //PointerSize::Bit64,
+    signature::Signature, 
+    Address, 
+    Process, 
+    file_format::elf,
+    file_format::elf::Symbol,
+
 };
-use asr::{signature::Signature, Address, Process};
 
 pub fn get_offsets(process: &Process, process_name: &str) -> Option<Offsets> {
-    let mut module_range = process.get_module_range(process_name).ok()?;
+    let module_range = process.get_module_range(process_name).ok()?;
     set_variable(
         "module_address",
         format!("{:X}", module_range.0.value()).as_str(),
     );
     set_variable("module_size", format!("{:X}", module_range.1).as_str());
+
+    let savemanger_address : Address;
+
     // hacked together garbage... gotta fix every patch - TODO find a real solution later
-    if process_name == "MinaTheHollower" {
-        module_range.1 = module_range.1 + 0x420F000; // linux is a bitch, do it right
+    match process_name {
+        "MinaTheHollower" => {
+            //module_range.1 = module_range.1 + 0x420F000; // linux is a bitch, do it right
+            //print_message("check1");
+            savemanger_address = Address::new(0);
+            let mut iter = elf::symbols(process, module_range.0);
+            //print_message("check2");
+            
+            let mut testin = 0;
+            
+            while testin < 20 {
+                testin += 1;
+                let n = iter.next()?;
+                print_message(n.get_name::<64>(process).unwrap().validate_utf8().unwrap());
+                print_message(format!("{:X}", n.address.value()).as_str());
+                
+            } 
+            let savemanager_symbol : Option<Symbol> = iter.find(|x| x.get_name::<64>(process).unwrap().matches(&"g_saveManager"));
+            if savemanager_symbol.is_none(){
+                print_message("buh");
+            }
+            //set_variable("test", format!("{:X}", savemanager_symbol.unwrap().address.value()).as_str());
+            
+            //print_message("check3");
+        }
+        "MinaTheHollower.exe" => {
+            
+
+            let savemanger_sig_address : Address;
+            let savemanger_pointer_op : Address;
+            let savemanger_pointer : Address;
+            
+
+            const SAVEMANAGER_SIG: Signature<4> = Signature::new("4c 0f 44 0d");
+            savemanger_sig_address = SAVEMANAGER_SIG.scan_process_range(process, module_range)?;
+            savemanger_pointer_op = savemanger_sig_address.add(0x08u64);
+
+            set_variable("savemanger_offset", format!("{:X}", savemanger_pointer_op.value()).as_str());
+            if let Ok(sm) = process.read::<u64>(
+                                savemanger_sig_address,
+                            ) {
+                                set_variable("savemanger_pointer_op_address", format!("{:X}", sm).as_str());
+                                set_variable("savemanger_pointer_shift", format!("{:X}", sm>>32).as_str());
+                                savemanger_address = Address::new(savemanger_pointer_op.value()+(sm>>32));
+                                set_variable("savemanger_pointer_1", format!("{:X}", savemanger_address.value()).as_str());
+                            } else {
+                                print_message("no savemanager pointer");
+                                return None;
+                            }
+        }
+        _ => {return None}
     }
-    //SAVEMANAGERHERE | Thanks Shane <3
-    const SAVEMANAGER_SIG: Signature<15> =
-        Signature::new("53 41 56 45 4D 41 4E 41 47 45 52 48 45 52 45");
-    let savemanger_address = SAVEMANAGER_SIG.scan_process_range(process, module_range)?;
-    if let Ok(bc) = process.read_pointer(savemanger_address.add(0x18), Bit64) {
-        set_variable("savemanger_address", format!("{:X}", bc.value()).as_str());
+
+
+    /* 
+    if version == "other" {
+        //SAVEMANAGERHERE | Thanks Shane <3
+        const SAVEMANAGER_SIG: Signature<15> =
+            Signature::new("53 41 56 45 4D 41 4E 41 47 45 52 48 45 52 45");
+        savemanger_address = SAVEMANAGER_SIG.scan_process_range(process, module_range)?.add(0x18);
+        set_variable("savemanger_pointer_address", format!("{:X}", savemanger_address.value()).as_str());
+        if let Ok(sm) = process.read_pointer(
+                            savemanger_address.add(0x18),
+                            Bit64
+                        ) {
+                            set_variable("savemanger_address", format!("{:X}", sm.value()).as_str());
+                        }
+        
+    } else {
+        savemanger_address = Address::new(0x05258C18);
+        if let Ok(sm) = process.read_pointer_path(
+                            module_range.0.add(0x05258C18),
+                            Bit64,
+                            &[0x8],
+                        ) {
+                            set_variable("savemanger_address", format!("{:X}", sm.value()).as_str());
+                        }
     }
+    */
+
     Some(Offsets {
         savemanager: savemanger_address,
-        fPlayTime: [0x18, 0x8],
-        fPlayTimeCleared: [0x18, 0x10],
-        fPlayTimeTotal: [0x18, 0x18],
-        generatorActivated: [0x18, 0x290],
-        sCheckpointGamestate: [0x1e8],
-        bGameCleared: [0x18, 0xd30],
-        mapSeen: [0x18, 0xd4d],
-        bossDefeated: [0x18, 0x280],
-        trinkets: [0x18, 0x470],
+        fPlayTime: [0x0, 0x8],
+        fPlayTimeCleared: [0x0, 0x10],
+        fPlayTimeTotal: [0x0, 0x18],
+        generatorActivated: [0x0, 0x290],
+        //sCheckpointGamestate: [0x1e8],
+        bGameCleared: [0x0, 0xd30],
+        mapSeen: [0x0, 0xd4d],
+        bossDefeated: [0x0, 0x280]
     })
 }
 
@@ -44,7 +121,7 @@ pub(crate) struct Offsets {
     pub fPlayTimeTotal: [u64; 2],
     pub generatorActivated: [u64; 2],
     pub bGameCleared: [u64; 2],
-    pub sCheckpointGamestate: [u64; 1],
+    //pub sCheckpointGamestate: [u64; 1],
     pub mapSeen: [u64; 2],
     pub bossDefeated: [u64; 2],
     pub trinkets: [u64; 2],
