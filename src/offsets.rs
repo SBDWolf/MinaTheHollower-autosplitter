@@ -110,7 +110,8 @@ pub fn get_offsets(process: &Process, process_name: &str) -> Option<Offsets> {
         //sCheckpointGamestate: [0x1e8],
         bGameCleared: [0x0, 0xd30],
         mapSeen: [0x0, 0xd4d],
-        bossDefeated: [0x0, 0x280]
+        bossDefeated: [0x0, 0x280],
+        trinkets: [0x0, 0x470],
     })
 }
 
